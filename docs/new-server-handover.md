@@ -46,11 +46,32 @@ run the whole project setup in an administrator shell. The helper rechecks the
 existing download's hash/signature, records policy metadata, and saves installer
 logs/results under `D:\Installers\Python\install-*`. It does not remove partial
 files or change policy. If policy prohibits all installations, it stops and
-retains a failure record; success on this server still requires operator proof.
+retains a failure record.
 
 Sources: [Microsoft error codes](https://learn.microsoft.com/en-us/windows/win32/msi/error-codes),
 [DisableMSI policy](https://learn.microsoft.com/en-us/windows/win32/msi/disablemsi),
 [Python installer options](https://docs.python.org/3.14/using/windows.html#installing-without-ui).
+
+### Verified server setup
+
+The operator reported successful setup on 3 October 2026 at 16:10:27 UTC
+(18:10:27 Berlin time), after the installer recovery:
+
+| Item | Reported result |
+| --- | --- |
+| Computer/account | `398F536`, `398F536\developer` |
+| Project | `D:\Dev\price-compare` |
+| Python | `3.14.8`, `D:\Tools\Python\3.14\python.exe` |
+| Project interpreter | `D:\Dev\price-compare\.venv\Scripts\python.exe` |
+| pip cache | `D:\UserData\developer\Caches\pip` |
+| Browser prepared/cache | `True`, `D:\UserData\developer\Caches\playwright` |
+| Offline tests | 17 passed; no broken requirements |
+| Insurer requests / Portal or SQL changed | `False` / `False` |
+| Setup records | `D:\Dev\price-compare\.local\setup-20261003-181027` |
+
+This verifies project setup from the operator's supplied summary. Desktop
+project access and the requested market-wide assessment implementation remain
+to be verified/delivered. Do not repeat installation or cloning for this state.
 
 ## Attach the local folder
 
