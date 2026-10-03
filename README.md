@@ -38,9 +38,11 @@ developer PowerShell:
 & 'D:\Tools\PowerShell\7\pwsh.exe' -NoProfile -File 'D:\Dev\price-compare\scripts\Initialize-PriceCompare.ps1' -IncludeBrowser
 ```
 
-The script prepares Python on D: if absent, creates the project's `.venv`, installs
-the pinned dependencies, puts browser/cache files on D:, and runs the offline
-tests. It does not contact an insurer or start a live quote journey.
+If Python is absent, the script requests administrator approval to install it
+for all users under `D:\Tools\Python\3.14`. The remaining setup runs as developer:
+it creates the project's `.venv`, installs the pinned dependencies, puts
+browser/cache files on D:, and runs the offline tests. It does not contact an
+insurer or start a live quote journey. Windows installation policy is not changed.
 
 For a notebook with an existing Python installation:
 

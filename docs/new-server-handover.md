@@ -18,10 +18,39 @@ exists, stop and inspect its contents rather than deleting/replacing it.
 
 Setup uses the [official Python 3.14.8 Windows installer](https://www.python.org/downloads/release/python-3148/),
 checks its published SHA256 and Python Software Foundation signature, and
-installs per user under `D:\Tools\Python\3.14` if that executable is absent.
+requests administrator approval to install for all users under
+`D:\Tools\Python\3.14` if that executable is absent. Only the Python installation
+helper is elevated; dependencies, browser preparation and tests run as developer.
 It does not change system/user Python PATH, file associations or another runtime.
 Project dependencies go into `D:\Dev\price-compare\.venv`; pip/Chromium caches
 go under `D:\UserData\developer\Caches`. It runs offline tests and no live quotes.
+
+### Recovery from Python exit code 1625
+
+The first non-elevated per-user attempt on 398F536 returned 1625 on 3 October
+2026. Microsoft defines this as installation forbidden by system policy; the
+specific server policy was not supplied. Its DisableMSI policy documentation
+distinguishes blocked non-elevated per-user installation from allowed elevated
+or per-machine installation for value 1. The updated setup uses the official
+installer's `InstallAllUsers=1` route without changing policy.
+
+In ordinary developer PowerShell, update the clean clone and rerun setup:
+
+```powershell
+& 'D:\Tools\Git\cmd\git.exe' -C 'D:\Dev\price-compare' pull --ff-only
+& 'D:\Tools\PowerShell\7\pwsh.exe' -NoProfile -File 'D:\Dev\price-compare\scripts\Initialize-PriceCompare.ps1' -IncludeBrowser
+```
+
+Approve the administrator prompt with the server administrator account. Do not
+run the whole project setup in an administrator shell. The helper rechecks the
+existing download's hash/signature, records policy metadata, and saves installer
+logs/results under `D:\Installers\Python\install-*`. It does not remove partial
+files or change policy. If policy prohibits all installations, it stops and
+retains a failure record; success on this server still requires operator proof.
+
+Sources: [Microsoft error codes](https://learn.microsoft.com/en-us/windows/win32/msi/error-codes),
+[DisableMSI policy](https://learn.microsoft.com/en-us/windows/win32/msi/disablemsi),
+[Python installer options](https://docs.python.org/3.14/using/windows.html#installing-without-ui).
 
 ## Attach the local folder
 

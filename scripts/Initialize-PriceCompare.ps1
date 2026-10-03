@@ -15,7 +15,7 @@ function Invoke-PriceCompareCommand {
 if (-not (Test-Path -LiteralPath $PythonPath -PathType Leaf)) {
     if ($env:COMPUTERNAME -ine '398F536' -or [Environment]::UserName -ne 'developer' -or $PythonPath -ne 'D:\Tools\Python\3.14\python.exe') {throw 'Supply -PythonPath with an existing Python 3.12+ executable; automatic installation is limited to developer on 398F536.'}
     $identity=[Security.Principal.WindowsIdentity]::GetCurrent()
-    if(([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'Use ordinary developer PowerShell for this per-user installation.'}
+    if(([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'Use ordinary developer PowerShell; Python installation requests separate elevation.'}
     $installerRoot='D:\Installers\Python'
     New-Item -ItemType Directory -Path $installerRoot -Force | Out-Null
     $installer=Join-Path $installerRoot 'python-3.14.8-amd64.exe'
@@ -23,10 +23,12 @@ if (-not (Test-Path -LiteralPath $PythonPath -PathType Leaf)) {
     if((Get-FileHash -LiteralPath $installer).Hash -ne '759BE887B96E736A3CA886DAF8D575F18FCAE1A09EFAB6902F42D59E8999F8EF'){throw 'Python installer differs from the published SHA256; it was not run.'}
     $signature=Get-AuthenticodeSignature -LiteralPath $installer
     if($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'Python Software Foundation'){throw 'Python installer signature was not verified; it was not run.'}
-    if(Test-Path -LiteralPath 'D:\Tools\Python\3.14'){throw 'Python target folder exists without the expected executable; no overwrite. Report this before retrying.'}
-    Write-Output 'Installing Python for developer under D:\Tools\Python\3.14...'
-    $process=Start-Process -FilePath $installer -ArgumentList @('/passive','InstallAllUsers=0','TargetDir=D:\Tools\Python\3.14','Include_launcher=0','InstallLauncherAllUsers=0','PrependPath=0','AppendPath=0','Include_test=0','Include_doc=0','Include_pip=1','Include_tcltk=0','AssociateFiles=0','Shortcuts=0') -WindowStyle Hidden -Wait -PassThru
-    if($process.ExitCode -notin @(0,3010)){throw ('Python installer failed with exit code '+$process.ExitCode+'. Keep the installer; do not substitute another path.')}
+    $helper=Join-Path $PSScriptRoot 'Install-PriceComparePython.ps1'
+    if(-not(Test-Path -LiteralPath $helper -PathType Leaf)){throw 'Python installer helper is missing; update the complete repository.'}
+    Write-Output 'Approve the administrator prompt for Python installation on D:. Project dependencies and tests will continue as developer.'
+    $powershell=Join-Path $PSHOME $(if($PSVersionTable.PSEdition -eq 'Desktop'){'powershell.exe'}else{'pwsh.exe'})
+    $process=Start-Process -FilePath $powershell -Verb RunAs -ArgumentList @('-NoProfile','-File',('"'+$helper+'"')) -WindowStyle Hidden -Wait -PassThru
+    if($process.ExitCode -ne 0 -or -not(Test-Path -LiteralPath $PythonPath -PathType Leaf)){throw 'Python administrator installation did not complete. Keep D:\Installers\Python\install-* logs and failure.json; no policy was changed. Do not rerun the whole project setup elevated.'}
 }
 $probe=@(& $PythonPath -c 'import sys; print(sys.version.split()[0]); print(int(sys.version_info >= (3,12))); print(sys.maxsize > 2**32)')
 if($LASTEXITCODE -ne 0 -or $probe.Count -ne 3 -or $probe[1] -ne '1' -or $probe[2] -ne 'True'){throw 'Expected Python 3.12+ x64 executable was not verified.'}
