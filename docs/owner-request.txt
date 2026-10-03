@@ -1,0 +1,3 @@
+We have tried to adapt the Python code to the Lemonade site and made good progress but eventually run into some challenges (cf. below and attached).
+
+May we ask you to spend a day to see whether you can overcome the issues?

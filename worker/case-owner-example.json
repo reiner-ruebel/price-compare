@@ -1,0 +1,25 @@
+{
+  "case_id": "owner-example-001",
+  "source": "Answers transcribed from the owner-supplied Lemonade_text.py; unverified test data, not a real application.",
+  "insured": {"firstName": "Dheeraj", "lastName": "Yenamala"},
+  "postal_code": "WV39HY",
+  "address_label_contains": "Little Haven",
+  "property": {
+    "relationToProperty": "owner",
+    "dwellingType": "detached_house",
+    "coverageType": "buildings_and_contents",
+    "declaredPrimaryResidence": true,
+    "daytimeOccupation": true,
+    "roofMaterial": "concrete",
+    "declaredGoodHouseCondition": true
+  },
+  "protectiveDevicesArray": ["smokeAlarm"],
+  "additionalResidentsArray": [],
+  "expensiveItems": false,
+  "userReportedClaims": "none",
+  "pastInsuranceCancellations": false,
+  "criminalHistory": false,
+  "date_of_birth": "1990-01-01",
+  "email": null,
+  "compliance": {"marketingTermsApproved": false, "termsOfServiceApproved": true}
+}

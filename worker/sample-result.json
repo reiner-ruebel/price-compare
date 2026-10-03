@@ -1,0 +1,44 @@
+{
+  "observed_at_utc": "2026-09-07T09:19:06.732824+00:00",
+  "status": "quoted",
+  "case_id": "owner-example-001",
+  "supplier_brand": "Lemonade",
+  "product_label": "Buildings and contents (owner-selected cover)",
+  "premium_amount": "51.92",
+  "currency": "GBP",
+  "premium_period": "month",
+  "displayed_price": "£51.92",
+  "premium_source": "history[-1].renderedStep.presentation.frame.summary",
+  "benefits_displayed": [
+    "Rebuild cost",
+    "Contents £10K",
+    "Temp accommodation £20K",
+    "Personal & property liability £1M"
+  ],
+  "quote_configuration": {
+    "quote.effectiveDate": "2026-09-08",
+    "quote.limits.contents": 10000,
+    "quote.limits.lossOfUse": 20000,
+    "quote.limits.personalLiability": 1000000,
+    "quote.coverages.homeEmergency": false,
+    "quote.coverages.legalDefense": false,
+    "quote.coverages.accidentalDamageYourHome": false,
+    "quote.coverages.accidentalDamage": false,
+    "quote.coverages.accidentalDamageMobile": false,
+    "quote.coverages.theft": false,
+    "quote.coverages.additionalPolicyholdersEnabled": false,
+    "quote.deductibles.baseDeductible": 150,
+    "quote.deductibles.buildingDeductible": 150,
+    "quote.deductibles.escapeOfWaterDeductible": 800
+  },
+  "annual_premium": null,
+  "notes": [
+    "Displayed quote only; no checkout or purchase performed.",
+    "Supplier brand and selected cover are not verification of the legal underwriting entity.",
+    "Default cover limits, excesses and start date were returned by the supplier; they were not selected by this runner.",
+    "A monthly amount is not an independently obtained annual premium."
+  ],
+  "request_count": 20,
+  "elapsed_seconds": 11.26,
+  "sample_notice": "Redacted real result observed on 7 September 2026. Not a prediction of the next run."
+}

@@ -1,0 +1,35 @@
+Hi ,
+
+I've made good progress on automating the Lemonade UK Home quote journey via Python and wanted to share the current status.
+
+What I've achieved
+
+Fully automated the onboarding/questionnaire flow via API.
+Successfully completes all customer, property, occupancy, claims, cancellation, criminal history and account detail questions.
+Successfully reaches the final onboarding step and generates a valid quote.
+Script returns a quotePublicId and quote-view URL.
+ 
+
+What I've discovered
+
+The onboarding API does not return the premium directly.
+Final onboarding response redirects to a quote page:
+/gb/home/quote/view?quotePublicId=...
+The quote page loads successfully using the authenticated Python session.
+The page is a React SPA and the premium is not embedded in the HTML source.
+Quote details appear to be loaded asynchronously via a separate API request after page load.
+Investigations completed
+
+Downloaded and analysed the main JS bundle (~3.7MB).
+Identified quote-related routing, quotePublicId handling and conversation APIs.
+Confirmed authenticated cookies are generated and maintained during the flow.
+Confirmed quote creation works consistently.
+Current blocker
+
+The remaining challenge is identifying the API call used by the React application to retrieve the actual quote details (premium, coverages, excesses, etc.) from the generated quotePublicId.
+
+Suggested next step
+
+I think the quickest path forward is to use Playwright/Selenium (or browser DevTools) to intercept the Fetch/XHR requests made after loading the quote page and identify the endpoint returning the quote data. Once that endpoint is found, it should be straightforward to call it directly from Python.
+
+I've attached the current script and supporting files for reference.
