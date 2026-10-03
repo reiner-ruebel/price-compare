@@ -1,6 +1,10 @@
 [CmdletBinding()]
 param([string]$PythonPath='D:\Tools\Python\3.14\python.exe',[switch]$IncludeBrowser)
 $ErrorActionPreference='Stop'
+if($env:COMPUTERNAME -ieq '398F536') {
+    $identity=[Security.Principal.WindowsIdentity]::GetCurrent()
+    if([Environment]::UserName -ne 'developer' -or ([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'On 398F536, use ordinary developer PowerShell for this project setup.'}
+}
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 if (-not (Test-Path -LiteralPath (Join-Path $root 'worker\requirements.txt') -PathType Leaf)) {throw 'Run from the complete price-compare repository.'}
 function Invoke-PriceCompareCommand {
@@ -41,6 +45,7 @@ if($IncludeBrowser){
     if($env:COMPUTERNAME -ieq '398F536'){[Environment]::SetEnvironmentVariable('PLAYWRIGHT_BROWSERS_PATH',$browserCache,'User')}
     Invoke-PriceCompareCommand $venvPython @('-m','pip','install','--cache-dir',$cache,'--disable-pip-version-check','-r',(Join-Path $root 'worker\requirements-browser.txt'))
     Invoke-PriceCompareCommand $venvPython @('-m','playwright','install','chromium')
+    Invoke-PriceCompareCommand $venvPython @('-c','from playwright.sync_api import sync_playwright; p=sync_playwright().start(); b=p.chromium.launch(); page=b.new_page(); page.set_content("<title>Offline browser check</title>"); assert page.title()=="Offline browser check"; b.close(); p.stop(); print("Offline Chromium launch passed")')
 }
 Write-Output 'Running the offline worker tests; no insurer or portal is contacted...'
 Invoke-PriceCompareCommand $venvPython @('-m','unittest','discover','-s',(Join-Path $root 'worker'),'-p','test_collect_quote.py','-v')
